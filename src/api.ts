@@ -1,4 +1,4 @@
-// Typed client for server/hermes_mc.py
+// Typed client for server/mc_bridge.py
 
 export interface Health {
   ok: boolean;
