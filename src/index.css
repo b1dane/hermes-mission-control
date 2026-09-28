@@ -1,0 +1,164 @@
+@import "tailwindcss";
+
+@theme {
+  --color-void: #050505;
+  --color-panel: #0c0c0d;
+  --color-panel2: #121213;
+  --color-edge: #1b1b1d;
+  --color-edge2: #2a2a2c;
+  --color-gold: #b89a68;
+  --color-gold-dim: #6f5d3e;
+  --color-teal: #7a8b8e;
+  --color-mint: #7f9a88;
+  --color-alert: #c27a72;
+  --color-warn: #c4a46a;
+  --color-ink: #e2dfd8;
+  --color-mute: #6d6b67;
+  --font-mono: "JetBrains Mono", "Fira Code", ui-monospace, "Cascadia Mono", Menlo, monospace;
+  --font-display: "Inter", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+html {
+  background: var(--color-void);
+}
+
+body {
+  font-family: var(--font-display);
+  color: var(--color-ink);
+  background: var(--color-void);
+  min-height: 100dvh;
+  -webkit-tap-highlight-color: transparent;
+  letter-spacing: -0.01em;
+}
+
+/* Cinematic volume: a still, distant key-light and a deep vignette. No motion. */
+.grid-bg {
+  position: relative;
+  isolation: isolate;
+}
+.grid-bg::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background:
+    radial-gradient(70% 55% at 50% -8%, rgba(184, 154, 104, 0.045), transparent 58%),
+    radial-gradient(50% 40% at 100% 100%, rgba(20, 24, 28, 0.55), transparent 70%),
+    #050505;
+}
+.grid-bg::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(ellipse 90% 80% at 50% 40%, transparent 40%, rgba(0, 0, 0, 0.55) 100%);
+}
+
+/* Optional grain — film, not CRT. */
+.scanlines::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 60;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.55 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
+/* Matte cinematic surface — almost opaque, no neon rim. */
+.glass {
+  position: relative;
+  background: color-mix(in oklab, var(--color-panel) 92%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.045);
+  box-shadow: 0 18px 40px -28px rgba(0, 0, 0, 0.9);
+}
+
+.glow-gold {
+  box-shadow: none;
+}
+.text-glow {
+  text-shadow: none;
+}
+
+.rail-active {
+  position: relative;
+}
+.rail-active::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 22%;
+  bottom: 22%;
+  width: 1px;
+  background: var(--color-gold);
+  opacity: 0.7;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #2a2a2c;
+  border-radius: 999px;
+}
+
+@keyframes pulse-led {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.45; }
+}
+.led-pulse { animation: pulse-led 2.8s ease-in-out infinite; }
+
+@keyframes blink-caret {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+.caret-blink { animation: blink-caret 1.1s step-end infinite; }
+
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.anim-in { animation: slide-up 0.35s ease both; }
+
+@keyframes sheen {
+  from { opacity: 0; }
+  to { opacity: 0; }
+}
+.sheen { animation: none; display: none; }
+
+@keyframes marquee-sweep {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(400%); }
+}
+.sweep { animation: none; }
+
+@keyframes radar-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+.radar-spin { animation: radar-spin 8s linear infinite; transform-origin: center; }
+
+input, textarea, select, button {
+  font-family: inherit;
+}
+
+button, input, textarea, select {
+  -webkit-tap-highlight-color: transparent;
+}
+
+::selection {
+  background: rgba(184, 154, 104, 0.22);
+  color: var(--color-ink);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .led-pulse, .anim-in, .radar-spin { animation: none; }
+}
