@@ -79,39 +79,33 @@ export default function Settings({
             placeholder="optional"
             className="min-w-0 flex-1 rounded-md border border-edge bg-void/60 px-2.5 py-2 text-xs text-ink outline-none focus:border-gold/40"
           />
-          <button onClick={apply} className="rounded-md border border-gold/50 bg-gold/15 px-3 text-[10px] font-bold uppercase tracking-wider text-gold transition-colors hover:bg-gold/25">
-            Connect
+          <button onClick={apply} className="rounded-md border border-gold/30 bg-gold/10 px-3 py-2 text-[10px] font-medium tracking-wide text-gold hover:bg-gold/15">
+            APPLY
           </button>
         </div>
-
-        {health ? (
-          <dl className="mt-3 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 border-t border-edge pt-2 text-[10px]">
-            <dt className="text-mute">hermes</dt>
-            <dd className={health.hermes_found ? "text-mint" : "text-alert"}>
-              {health.hermes_found ? `${health.hermes_bin} · v${health.version ?? "?"}` : "not found on PATH — pkg install hermes-agent"}
-            </dd>
-            <dt className="text-mute">home</dt>
-            <dd className={health.home_exists ? "text-ink" : "text-warn"}>{health.hermes_home}{health.home_exists ? "" : " (missing — run hermes setup)"}</dd>
-            <dt className="text-mute">platform</dt>
-            <dd className="text-ink">{health.termux ? "Termux / Android" : "generic"} · python {health.python}</dd>
-            <dt className="text-mute">auth</dt>
-            <dd className="text-ink">{health.auth ? "token required" : "loopback, no token"}</dd>
-          </dl>
-        ) : (
-          <p className="mt-3 border-t border-edge pt-2 text-[10px] leading-relaxed text-mute">
-            {error ? <span className="text-alert">probe failed: {error}. </span> : null}
-            Start the bridge in Termux: <span className="text-gold">python server/hermes_mc.py</span> (or <span className="text-gold">bash start.sh</span>). It serves this UI and drives the <span className="text-teal">hermes</span> CLI via subprocess. Retries every 15s.
+        {error && <p className="mt-2 text-[10px] text-alert">Last error: {error}</p>}
+        {link !== "online" && (
+          <p className="mt-3 text-[10px] leading-relaxed text-mute">
+            Start the bridge in Termux: <span className="text-gold">python server/mc_bridge.py</span> (or <span className="text-gold">bash start.sh</span>). It serves this UI and drives the <span className="text-teal">hermes</span> CLI via subprocess. Retries every 15s.
           </p>
+        )}
+        {health && (
+          <dl className="mt-3 grid grid-cols-2 gap-x-3 gap-y-1 border-t border-edge pt-3 text-[10px]">
+            <dt className="text-mute">Hermes</dt><dd className="text-ink">{health.hermes_found ? health.version ?? "found" : "not found"}</dd>
+            <dt className="text-mute">Home</dt><dd className="truncate text-ink">{health.hermes_home}</dd>
+            <dt className="text-mute">Python</dt><dd className="text-ink">{health.python}</dd>
+            <dt className="text-mute">Termux</dt><dd className="text-ink">{health.termux ? "yes" : "no"}</dd>
+          </dl>
         )}
       </Panel>
 
-      <Panel title="Display & Device">
+      <Panel title="Display">
         <ul className="divide-y divide-edge/60">
           {(
             [
-              ["scanlines", "Subtle display texture", "Optional, off by default"],
-              ["wakeLock", "Request wake lock", "start.sh calls termux-wake-lock while running"],
-              ["notifications", "Push notifications", "Deliver cron results via termux-notification"],
+              ["scanlines", "CRT scanlines", "Subtle overlay on the dashboard"],
+              ["wakeLock", "Keep screen awake", "Request wake lock while open"],
+              ["notifications", "Notifications", "Show bridge status toasts when available"],
               ["compact", "Compact density", "Tighter spacing for small screens"],
             ] as const
           ).map(([key, label, sub]) => (
@@ -134,7 +128,7 @@ export default function Settings({
             <span className="text-teal">hermes</span> setup{"\n\n"}
             <span className="text-mute"># 2 · this dashboard</span>{"\n"}
             <span className="text-teal">git</span> clone &lt;repo&gt; ~/hermes-mission-control && <span className="text-teal">cd</span> ~/hermes-mission-control{"\n"}
-            <span className="text-teal">bash</span> start.sh            <span className="text-mute"># builds once, serves 127.0.0.1:8664, opens browser</span>{"\n\n"}
+            <span className="text-teal">bash</span> start.sh            <span className="text-mute"># builds once, serves 127.0.0.1:8000, opens browser</span>{"\n\n"}
             <span className="text-mute"># 3 · optional: reach it from other devices via Tailscale</span>{"\n"}
             <span className="text-teal">bash</span> start.sh --lan      <span className="text-mute"># binds 0.0.0.0 with a generated token</span>{"\n\n"}
             <span className="text-mute"># API surface (stdlib python, no pip)</span>{"\n"}
