@@ -5,7 +5,7 @@ that runs **entirely on your Android device** inside Termux. A tiny stdlib-only 
 the real `hermes` CLI and reads `~/.hermes`; the React/Tailwind UI is compiled into one `dist/index.html`.
 
 ```
- Browser (Android)  ──HTTP/SSE──▶  server/hermes_mc.py (python)  ──subprocess──▶  hermes CLI
+ Browser (Android)  ──HTTP/SSE──▶  server/mc_bridge.py (python)  ──subprocess──▶  hermes CLI
                                        │                                          ~/.hermes/
                                        └─ /proc, termux-api  (CPU · RAM · battery · thermal · net)
 ```
@@ -18,7 +18,7 @@ pkg install hermes-agent                          # Nous signed APT repo, aarch6
 hermes setup                                      # provider + model wizard
 
 git clone <this repo> ~/hermes-mission-control && cd ~/hermes-mission-control
-bash start.sh                                     # builds once, serves on http://127.0.0.1:8664
+bash start.sh                                     # builds once, serves on http://127.0.0.1:8000
 ```
 
 Add the page to your home screen for a full-screen app. For phone ⇄ laptop access over Tailscale:
@@ -53,7 +53,7 @@ on Android, while speech output uses the device browser's speech engine.
 ## Bridge flags
 
 ```
-python server/hermes_mc.py [--host 127.0.0.1] [--port 8664] [--token SECRET] [--allow-shell] [--open]
+python server/mc_bridge.py [--host 127.0.0.1] [--port 8000] [--token SECRET] [--allow-shell] [--open]
 ```
 
 `--allow-shell` lets the console run arbitrary commands (default: `hermes …` only). Never expose the
